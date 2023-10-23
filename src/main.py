@@ -7,7 +7,12 @@ if __name__ == "__main__":
         "N:/Test Data/05516-3-0000 M3-F-1.8-1.5-M12/ScanData"
     ]
 
-    serial_numbers = input("Enter the serial numbers (comma separated): ").split(',')
+    serialNumbers = [input("Enter the serial numbers (comma separated) or a range (hyphen separated): ")]
+    if '-' in serialNumbers[0]:
+        minimum, maximum = serialNumbers[0].split('-')
+        serialNumbers = [*range(int(minimum), int(maximum))]
+    else:
+        serialNumbers = serialNumbers[0].split(',')
     batch_note = input("Enter a batch note: ").replace(" ",
                                                        "_")  # Replacing spaces with underscores for filename safety
 
@@ -21,7 +26,7 @@ if __name__ == "__main__":
 
     # for serial in serial_numbers:
     # serial = serial.strip()  # Remove any extra spaces
-    input_filepath, output_filepath = find_file_by_serial(directories, serial_numbers, choice, batch_note)
+    input_filepath, output_filepath = find_file_by_serial(directories, serialNumbers, choice, batch_note)
 
     if input_filepath:
         extract_and_filter_data(input_filepath, output_filepath)

@@ -12,44 +12,48 @@ def find_file_by_serial(directories: list, serialNumbers: list, choice: str, bat
     :param batch_note: User inputted note that goes in file name
     :return: Returns the oldest or newest files matching the serial numbers you input and the output filepath
     """
+    # Filepath to location of matching files
     matchingFiles = []
-    outputFilenames = []
+
+    # Used to get the newest or oldest version. Value = date/time created, filepath
+    outputFilenames = {}
+
+    # List of filenames created to be used for the outputs
+    outputFileList = []
+
     # Create the output filename based on user choice
     script_dir = os.path.dirname(os.path.realpath(__file__))  # Get the directory of the script itself
     output_directory = os.path.join(script_dir, "../TipTilt Output")
     current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    getTime = 0
 
     for serialNum in serialNumbers:
         serialFound = False
         for directory in directories:
             for filename in os.listdir(directory):
                 if f"M3-F_{serialNum}_" in filename:
-                    if not outputFilenames:
-                        getTime = os.path.getmtime(os.path.join(directory, filename))
-
-                    if choice == "oldest":
-                        if os.path.getmtime(os.path.join(directory, filename)) >= getTime:
-                            getTime = os.path.getmtime(os.path.join(directory, filename))
-                            if serialFound:
-                                outputFilenames.pop()
-                                matchingFiles.pop()
-                            matchingFiles.extend([os.path.join(directory, filename)])
-                            outputFilenames.append(f"1st_test_output_{batch_note}_{serialNum}_{current_datetime}.csv")
-
+                    if serialNum not in outputFilenames:
+                        outputFilenames[serialNum] = (os.path.getmtime(os.path.join(directory, filename)),
+                                                      os.path.join(directory, filename))
                     else:
-                        if os.path.getmtime(os.path.join(directory, filename)) <= getTime:
-                            getTime = os.path.getmtime(os.path.join(directory, filename))
-                            if serialFound:
-                                outputFilenames.pop()
-                                matchingFiles.pop()
-                            matchingFiles.extend([os.path.join(directory, filename)])
-                            outputFilenames.append(f"most_recent_test_output_{batch_note}_{serialNum}_"
-                                                   f"{current_datetime}.csv")
-
-                    serialFound = True
+                        if choice == "oldest":
+                            if outputFilenames[serialNum][0] <= os.path.getmtime(os.path.join(directory, filename)):
+                                outputFilenames[serialNum] = ((os.path.getmtime(os.path.join(directory, filename)),
+                                                               os.path.join(directory, filename)))
+                        else:
+                            if outputFilenames[serialNum][0] >= os.path.getmtime(os.path.join(directory, filename)):
+                                outputFilenames[serialNum] = ((os.path.getmtime(os.path.join(directory, filename)),
+                                                               os.path.join(directory, filename)))
+        if serialNum in outputFilenames:
+            serialFound = True
+            outputFileList.append(f"most_recent_test_output_{batch_note}_{serialNum}_"
+                                  f"{current_datetime}.csv")
         if not serialFound:
             print(f"Serial Number {serialNum} not found")
+
+    # Create list of filepaths from final values in dictionary
+    for filepath in outputFilenames.values():
+        matchingFiles.append(filepath[1])
+
     if not matchingFiles:
         print("No matching files found")
         return None, None
@@ -58,9 +62,8 @@ def find_file_by_serial(directories: list, serialNumbers: list, choice: str, bat
     matchingFiles.sort(key=lambda x: os.path.getmtime(x))
 
     outputFilepath = []
-    for i in range(len(outputFilenames)):
-        outputFilepath.append(os.path.join(output_directory, outputFilenames[i]))
-    #print(outputFilenames)
+    for i in range(len(outputFileList)):
+        outputFilepath.append(os.path.join(output_directory, outputFileList[i]))
 
     # Return the oldest or most recent file based on user choice
     if choice == "oldest":
