@@ -13,11 +13,11 @@ if __name__ == "__main__":
 
     while True:
         choice = input(
-            "Would you like to find the oldest or most recent files? (Enter 'oldest' or 'recent'): ").strip().lower()
-        if choice in ["oldest", "recent"]:
+            "Would you like to find the oldest or newest files? (Enter 'oldest' or 'newest'): ").strip().lower()
+        if choice in ["oldest", "newest"]:
             break
         else:
-            print("Invalid choice. Please enter either 'oldest' or 'recent'.")
+            print("Invalid choice. Please enter either 'oldest' or 'newest'.")
 
     # for serial in serial_numbers:
     # serial = serial.strip()  # Remove any extra spaces
