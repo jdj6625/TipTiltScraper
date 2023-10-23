@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-import cmath
 
 
 def find_file_by_serial(directories: list, serialNumbers: list, choice: str, batch_note: str) -> tuple:
