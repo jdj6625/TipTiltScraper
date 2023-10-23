@@ -6,7 +6,7 @@ def extract_and_filter_data(input_filepath: list, output_filepath: list) -> bool
     Read the file line by line and extract data between "ZGC2" and "ZGC3"
     :param input_filepath:
     :param output_filepath:
-    :return:
+    :return: Whether the file wrote all output files with no exceptions
     """
     data_between_markers = []
     finishedExecution = True
