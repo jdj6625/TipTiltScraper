@@ -36,10 +36,9 @@ def extract_and_filter_data(input_filepath: list, output_filepath: list) -> bool
             with open(output_filepath[i], 'w') as outfile:
                 for line in filtered_data:
                     outfile.write(line + "\n")
+            print(f"Processed {input_filepath[i]} and wrote filtered data to {output_filepath[i]}")
         except:
             print("File could not be written")
             finishedExecution = False
-
-        print(f"Processed {input_filepath[i]} and wrote filtered data to {output_filepath[i]}")
 
     return finishedExecution
