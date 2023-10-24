@@ -34,7 +34,7 @@ def find_file_by_serial(directories: list, serialNumbers: list, choice: str, bat
                         outputFilenames[serialNum] = (os.path.getmtime(os.path.join(directory, filename)),
                                                       os.path.join(directory, filename))
                     else:
-                        if choice == "oldest":
+                        if choice == "o":
                             if outputFilenames[serialNum][0] <= os.path.getmtime(os.path.join(directory, filename)):
                                 outputFilenames[serialNum] = ((os.path.getmtime(os.path.join(directory, filename)),
                                                                os.path.join(directory, filename)))
@@ -44,8 +44,12 @@ def find_file_by_serial(directories: list, serialNumbers: list, choice: str, bat
                                                                os.path.join(directory, filename)))
         if serialNum in outputFilenames:
             serialFound = True
-            outputFileList.append(f"most_recent_test_output_{batch_note}_{serialNum}_"
+            if choice == 'o':
+                outputFileList.append(f"oldest_test_output_{batch_note}_{serialNum}_"
                                   f"{current_datetime}.csv")
+            else:
+                outputFileList.append(f"newest_test_output_{batch_note}_{serialNum}_"
+                                      f"{current_datetime}.csv")
         if not serialFound:
             print(f"Serial Number {serialNum} not found")
 
@@ -57,15 +61,12 @@ def find_file_by_serial(directories: list, serialNumbers: list, choice: str, bat
         print("No matching files found")
         return None, None
 
-    # Sort files by their modification time
-    matchingFiles.sort(key=lambda x: os.path.getmtime(x))
-
     outputFilepath = []
     for i in range(len(outputFileList)):
         outputFilepath.append(os.path.join(output_directory, outputFileList[i]))
 
     # Return the oldest or most recent file based on user choice
-    if choice == "oldest":
+    if choice == "o":
         return matchingFiles, outputFilepath
     else:
         return matchingFiles, outputFilepath
