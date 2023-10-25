@@ -34,7 +34,7 @@ def find_file_by_serial(directories: list, serialNumbers: list, choice: str, bat
                         outputFilenames[serialNum] = (os.path.getmtime(os.path.join(directory, filename)),
                                                       os.path.join(directory, filename))
                     else:
-                        if choice == "o":
+                        if choice == "n":
                             if outputFilenames[serialNum][0] <= os.path.getmtime(os.path.join(directory, filename)):
                                 outputFilenames[serialNum] = ((os.path.getmtime(os.path.join(directory, filename)),
                                                                os.path.join(directory, filename)))
