@@ -9,10 +9,10 @@ if __name__ == "__main__":
 
     serialNumbers = [input("Enter the serial numbers (comma separated) or a range (hyphen separated): ")]
     if '-' in serialNumbers[0]:
-        minimum, maximum = serialNumbers[0].split('-')
+        minimum, maximum = serialNumbers[0].replace(" ", "").split('-')
         serialNumbers = [*range(int(minimum), int(maximum)+1)]
     else:
-        serialNumbers = serialNumbers[0].split(',')
+        serialNumbers = serialNumbers[0].replace(" ", "").split(',')
     batch_note = input("Enter a batch note: ").replace(" ",
                                                        "_")  # Replacing spaces with underscores for filename safety
 
